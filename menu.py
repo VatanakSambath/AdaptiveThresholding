@@ -1,10 +1,10 @@
+import tkinter
 from tkinter import *
 from tkinter import filedialog as fd
 from PIL import Image, ImageTk
 import adaptiveThreshholding as at
 import imageEnhancement
 import cv2
-import numpy as np
 
 app = Tk()
 app.title('Image Processing')
@@ -52,11 +52,23 @@ def setImage(outImage):
     lblImage.image = img
 
 def adaptive_threshholding(image):
-    outImg = at.bradley_roth_numpy(image)
+    outImg = at.bradley_roth_numpy(image, False)
     # outImg.thumbnail((450, 450))
     # img = ImageTk.PhotoImage(outImg)
     # lblImage.configure(image=img)
     # lblImage.image = img
+
+def otsu_with_adaptiveThresholding(image, imagePath):
+    if not image:
+        return tkinter.messagebox.showinfo(title="Info", message="Please load image first before apply any methods")
+    else:
+        img = cv2.imread(imagePath)
+        grayImg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        thresh, binaryImg = cv2.threshold(grayImg, 0, 255, cv2.THRESH_OTSU)
+        at.bradley_roth_numpy(image, None, thresh)
+
+def erosion_adaptive_threshholding(image):
+    at.bradley_roth_numpy(image, True)
 
 def bilateral_enhancement(img):
     outImg = imageEnhancement.adaptive_bilateral(img)
@@ -91,7 +103,8 @@ enhance_menu.add_command(label='Bilateral Blurring', command=lambda: bilateral_e
 enhance_menu.add_command(label='Median Blurring', command=lambda: median_threshholding(imagePath), underline=0)
 
 binarize_menu.add_command(label='Adaptive Thresholding', command=lambda: adaptive_threshholding(image), underline=0)
-binarize_menu.add_command(label='Otsu & Adaptive Thresholding', command=lambda: adaptive_threshholding(image), underline=0)
+binarize_menu.add_command(label='Erosion & Adaptive Thresholding', command=lambda: erosion_adaptive_threshholding(image), underline=0)
+binarize_menu.add_command(label='Otsu & Adaptive Thresholding', command=lambda: otsu_with_adaptiveThresholding(image, imagePath), underline=0)
 
 
 def main():

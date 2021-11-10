@@ -5,7 +5,7 @@ import cv2
 from ctypes import *
 
 
-def bradley_roth_numpy(image, s=None, t=None):
+def bradley_roth_numpy(image, isErosion, s=None, t=None):
     if not image:
         return tkinter.messagebox.showinfo(title="Info", message="Please load image first before apply any methods")
     else:
@@ -20,7 +20,7 @@ def bradley_roth_numpy(image, s=None, t=None):
         # area in the window
         if t is None:
             t = 23.0
-
+        print("threshold value: " + str(t))
         # Compute integral image
         intImage = np.cumsum(np.cumsum(img, axis=1), axis=0)
 
@@ -80,8 +80,21 @@ def bradley_roth_numpy(image, s=None, t=None):
         # Also convert back to uint8
         out = 255 * np.reshape(out, (rows, cols)).astype(np.uint8)
         outImage = Image.fromarray(out)
-        outImage.show()
-        # Return PIL image back to user
+        outImage.save("adaptiveThresholdImage.jpg")
+
+        if isErosion is True:
+            #apply Morphological Transformations (Dilation)
+            img = cv2.imread("adaptiveThresholdImage.jpg", 0)
+            kernel = np.ones((2, 2), np.uint8)
+            #erosion
+            img_erosion = cv2.erode(img, kernel, iterations=1)
+            #dilation
+            # dilation = cv2.dilate(img, kernel, iterations=1)
+            outImage = Image.fromarray(img_erosion)
+            outImage.show()
+        else:
+            outImage.show()
+            # Return PIL image back to user
         return Image.fromarray(out)
 
 

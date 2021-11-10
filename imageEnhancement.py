@@ -11,7 +11,7 @@ def adaptive_bilateral(image):
         img = cv2.imread(image)
         # Apply bilateral filter with d = 15,
         # sigmaColor = sigmaSpace = 75.
-        bilateral = cv2.bilateralFilter(img, 30, 40, 40)
+        bilateral = cv2.bilateralFilter(img, 15, 40, 40)
         outImage = Image.fromarray(bilateral)
         #outImage.show()
         # Save the output.
