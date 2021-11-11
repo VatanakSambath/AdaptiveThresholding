@@ -87,13 +87,13 @@ def bradley_roth_numpy(image, isErosion, s=None, t=None):
             img = cv2.imread("adaptiveThresholdImage.jpg", 0)
             kernel = np.ones((2, 2), np.uint8)
             #erosion
-            img_erosion = cv2.erode(img, kernel, iterations=1)
+            out = cv2.erode(img, kernel, iterations=1)
             #dilation
             # dilation = cv2.dilate(img, kernel, iterations=1)
-            outImage = Image.fromarray(img_erosion)
-            outImage.show()
-        else:
-            outImage.show()
+            #outImage = Image.fromarray(out)
+            #outImage.show()
+        #else:
+            #outImage.show()
             # Return PIL image back to user
         return Image.fromarray(out)
 
